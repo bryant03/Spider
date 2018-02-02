@@ -110,8 +110,23 @@ class download(object):
         result_landPeople = bf1.find_all('p', class_ = 'text-gray-2 padding-b-15 font-18')
         d['landPeople'] = result_landPeople[0].text
         
-        result_landPhone = bf1.find_all('p', id = 'land_display_phone')
-        print (result_landPhone)
+        idd = url[url.rfind('-') + 1 : len(url) - 5]
+
+        newUrl = url[:url.rfind('/') + 1] + 'landext/view/' + idd
+
+        result_verifyWay = bf1.find_all('a', id = 'btn_apply_2way_call')
+        s = str (result_verifyWay[0]).rfind(')')
+        verify = str (result_verifyWay[0])[s-2]
+        if verify == '1':
+            newUrl += '/1'
+        else :
+            newUrl += '/2'
+
+        # print (newUrl)
+        result_phone = requests.get(url=newUrl)
+        # print (result_phone.text)
+        phone = json.loads(result_phone.text)['data']['display_phone']
+        d['phone'] = phone
         print (d)
         # with open(file, 'a+') as f:
         # f.write(mobile+'\n')   #加\n换行显示
@@ -121,34 +136,37 @@ class download(object):
         
 
 if __name__ == '__main__':
-    # path= os.path.abspath('.')
-    # path =path + os.sep+'img'
-    # isExists=os.path.exists(path)
-    # print (isExists)
-    # if not isExists:
-    #     os.makedirs(path) 
+    path= os.path.abspath('.')
+    path =path + os.sep+'img'
+    isExists=os.path.exists(path)
+    print (isExists)
+    if not isExists:
+        os.makedirs(path) 
     
     
-    # a = download()
+    a = download()
     # a.generateIds()
     # a.get_links()
-    # a.downloadDetails("http://taicang.tuliu.com/s-view-58614.html")
+    a.downloadDetails("http://balinyouqi.tuliu.com/s-view-58835.html")
+    # ss = 'http://hamixian.tuliu.com/view-517746.html'
+    # print (len(ss))
+    # print (ss[ss.rfind('-')+1:len(ss)-5])
+    # s =  "http://huangzhou.tuliu.com/landext/view/30706/1"
+    # req = requests.get(url=s)
+    # print (req.text)
 
-    s =  "http://huangzhou.tuliu.com/landext/view/30706/1"
-    req = requests.get(url=s)
-    print (req.text)
-
-    s2 = "http://mengla.tuliu.com/landext/view/504936/2"
-    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36',
-                'Referer' : 'http://mengla.tuliu.com/view-504936.html',
-                'X-Requested-With': 'XMLHttpRequest',
-                'Accept-Language': 'zh-CN,zh;q=0.9',
-                'Accept': 'application/json, text/javascript, */*; q=0.01'}
-    req = requests.get(url=s2,headers=headers)
-    print (req.text)
-    # /landext/view/58671/1
+    # s2 = "http://mengla.tuliu.com/landext/view/504936/1"
+    # headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36',
+    #             'Referer' : 'http://mengla.tuliu.com/view-504936.html',
+    #             'X-Requested-With': 'XMLHttpRequest',
+    #             'Accept-Language': 'zh-CN,zh;q=0.9',
+    #             'Accept': 'application/json, text/javascript, */*; q=0.01'}
+    # req = requests.get(url=s2,headers=headers)
+    # print (req.text)
+    # # /landext/view/58671/1
 
 
-    s3 = "http://arongqi.tuliu.com/landext/view/58627/1"
-    req = requests.get(url=s3)
-    print (req.text)
+    # s3 = "http://huangzhou.tuliu.com/landext/view/30706/1"
+    # req = requests.get(url=s3)
+    # print (req.text)
+    # print (json.loads(req.text)['data']['display_phone'])
